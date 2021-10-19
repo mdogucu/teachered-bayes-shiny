@@ -3,39 +3,101 @@ library(bayesrules)
 library(ggplot2)
 library(shinythemes)
 
-ui <- fluidPage(theme = shinytheme("cerulean"),
-  sliderInput(inputId = "alpha",
-              label = "Choose the shape parameter (alpha)",
-              min = 0.00001,
-              max = 50,
-              value = 1),
-  sliderInput(inputId = "beta",
-              label = "Choose the rate parameter (beta) ",
-              min = 0.00001,
-              max = 50,
-              value = 1),
-  numericInput(inputId = "n_trial",
-               label = "Number of observations/cases",
-               min = 1,
-               value = 10),
-  numericInput(inputId = "n_success",
-               label = "Number of specified outcomes",
-               min = 1,
-               value = 8),
+ui <- fluidPage(theme = shinytheme("united"),
+                titlePanel("Bayes"),
+                tabsetPanel(id = "oneandonly",
+                            tabPanel("Prior",
+                                     sliderInput(inputId = "alpha",
+                                                 label = "Choose the shape parameter (alpha)",
+                                                 min = 0.00001,
+                                                 max = 50,
+                                                 value = 1),
+                                     sliderInput(inputId = "beta",
+                                                 label = "Choose the rate parameter (beta) ",
+                                                 min = 0.00001,
+                                                 max = 50,
+                                                 value = 1),
+                                     numericInput(inputId = "y_upper",
+                                                 label = "Choose an upper limit for the y-axis",
+                                                 min = 1,
+                                                 max = 500,
+                                                 value = 10),
+                                     plotOutput("prior_plot")),
+                            
+                            tabPanel("Data",
+                                     numericInput(inputId = "n_trial",
+                                                  label = "Number of observations/cases",
+                                                  min = 1,
+                                                  value = 10),
+                                     numericInput(inputId = "n_success",
+                                                  label = "Number of specified outcomes",
+                                                  min = 1,
+                                                  value = 8),
+                                     plotOutput("posterior_plot")),
+                            
+                            tabPanel("More Data",
+                                     numericInput(inputId = "nn_trial",
+                                                  label = "Number of observations/cases",
+                                                  min = 1,
+                                                  value = 10),
+                                     numericInput(inputId = "nn_success",
+                                                  label = "Number of specified outcomes",
+                                                  min = 1,
+                                                  value = 8),
+                                     plotOutput("posterior2_plot")),
+                            
+                            tabPanel("Even more data",
+                                     numericInput(inputId = "nnn_trial",
+                                                  label = "Number of observations/cases",
+                                                  min = 1,
+                                                  value = 10),
+                                     numericInput(inputId = "nnn_success",
+                                                  label = "Number of specified outcomes",
+                                                  min = 1,
+                                                  value = 8),
+                                     plotOutput("posterior3_plot"))
+                            
+                            
+                            
+                            )# end of tabsetpanel
+                          
+                
   
-  plotOutput("some_plot")
   
 )
 server <- function(input, output) {
   
-  output$some_plot <- renderPlot({
+  output$prior_plot <- renderPlot({
    plot_beta_binomial(input$alpha,
               input$beta,
-              input$n_success,
-              input$n_trial,
               likelihood = FALSE,
               posterior = FALSE) +
-      ylim(0, 6)
+      theme(legend.position = "none") +
+      ylim(0, input$y_upper)
+    })
+    
+  output$posterior_plot <- renderPlot({
+    plot_beta_binomial(input$alpha,
+                       input$beta,
+                       input$n_success,
+                       input$n_trial) +
+      ylim(0, input$y_upper)})  
+    
+    output$posterior2_plot <- renderPlot({
+      plot_beta_binomial(input$alpha,
+                         input$beta,
+                         input$n_success + input$nn_success,
+                         input$n_trial + input$nn_trial) +
+        ylim(0, input$y_upper)
+      }) 
+      
+    output$posterior3_plot <- renderPlot({
+        plot_beta_binomial(input$alpha,
+                           input$beta,
+                           input$n_success + input$nn_success + input$nnn_success,
+                           input$n_trial + input$nn_trial + input$nnn_trial) +
+          ylim(0, input$y_upper) 
+      
   })
 
 }
