@@ -84,18 +84,18 @@ server <- function(input, output) {
       ylim(0, input$y_upper)})  
     
     output$posterior2_plot <- renderPlot({
-      plot_beta_binomial(input$alpha,
-                         input$beta,
-                         input$n_success + input$nn_success,
-                         input$n_trial + input$nn_trial) +
+      plot_beta_binomial(input$alpha + input$n_success,
+                         input$beta + input$n_trial - input$n_success,
+                         input$nn_success,
+                         input$nn_trial) +
         ylim(0, input$y_upper)
       }) 
       
     output$posterior3_plot <- renderPlot({
-        plot_beta_binomial(input$alpha,
-                           input$beta,
-                           input$n_success + input$nn_success + input$nnn_success,
-                           input$n_trial + input$nn_trial + input$nnn_trial) +
+        plot_beta_binomial(input$alpha + input$n_success + input$nn_success,
+                           input$beta + input$n_trial - input$n_success + input$nn_trial - input$nn_success,
+                           input$nnn_success,
+                           input$nnn_trial) +
           ylim(0, input$y_upper) 
       
   })
