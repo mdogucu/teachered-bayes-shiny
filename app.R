@@ -2,6 +2,8 @@ library(shiny)
 library(bayesrules)
 library(ggplot2)
 library(shinythemes)
+theme_set(theme_gray(base_size = 14))
+
 
 ui <- fluidPage(theme = shinytheme("united"),
                 titlePanel("Bayes"),
