@@ -2,7 +2,6 @@ library(shiny)
 library(bayesrules)
 library(ggplot2)
 library(shinythemes)
-theme_set(theme_gray(base_size = 14))
 
 
 ui <- fluidPage(theme = shinytheme("united"),
@@ -75,7 +74,8 @@ server <- function(input, output) {
               likelihood = FALSE,
               posterior = FALSE) +
       theme(legend.position = "none") +
-      ylim(0, input$y_upper)
+      ylim(0, input$y_upper) +
+      theme_gray(base_size = 16)
     })
     
   output$posterior_plot <- renderPlot({
@@ -83,14 +83,17 @@ server <- function(input, output) {
                        input$beta,
                        input$n_success,
                        input$n_trial) +
-      ylim(0, input$y_upper)})  
+      ylim(0, input$y_upper) +
+      theme_gray(base_size = 16)
+    })  
     
     output$posterior2_plot <- renderPlot({
       plot_beta_binomial(input$alpha + input$n_success,
                          input$beta + input$n_trial - input$n_success,
                          input$nn_success,
                          input$nn_trial) +
-        ylim(0, input$y_upper)
+        ylim(0, input$y_upper) +
+        theme_gray(base_size = 16)
       }) 
       
     output$posterior3_plot <- renderPlot({
@@ -98,7 +101,8 @@ server <- function(input, output) {
                            input$beta + input$n_trial - input$n_success + input$nn_trial - input$nn_success,
                            input$nnn_success,
                            input$nnn_trial) +
-          ylim(0, input$y_upper) 
+        ylim(0, input$y_upper) +
+        theme_gray(base_size = 16)
       
   })
 
